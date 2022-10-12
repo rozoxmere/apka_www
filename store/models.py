@@ -7,7 +7,6 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     amount = models.IntegerField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
-    rating = models.FloatField(blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'product'
