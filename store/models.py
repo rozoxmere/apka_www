@@ -11,6 +11,18 @@ class Product(models.Model):
         managed = False
         db_table = 'product'
 
+
+
+class Druzyna(models.Model):
+    nazwa = models.TextField();
+    kraj = models.CharField(max_length=2)
+
+    class Meta:
+        verbose_name = "Drużyna"
+        verbose_name_plural = "Drużyny"
+    def __str__(self):
+        return f"{self.nazwa} ({self.kraj})"
+
 class Osoba(models.Model):
 
     class Months(models.IntegerChoices):
@@ -32,9 +44,11 @@ class Osoba(models.Model):
     nazwisko = models.TextField(null=False, blank=False)
     miesiac_urodzenia = models.IntegerField(choices=Months.choices)
     data_dodania = models.DateField(auto_now_add=True)
+    druzyna = models.ForeignKey(Druzyna, on_delete=models.SET_NULL,  null=True)
 
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"
 
     class Meta:
         ordering = ["nazwisko"]
+
