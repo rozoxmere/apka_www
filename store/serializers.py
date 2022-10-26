@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from models import Osoba, Druzyna, Months
+from store.models import Osoba, Druzyna, Months, Product
 
 class OsobaSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     imie = serializers.CharField(required=True)
     nazwisko = serializers.CharField(required=True)
-    miesiac_urodzenia = serializers.ChoiceField(choices=Months, default=Months[0][0])
-    druzyna = serializers.PrimaryKeyRelatedField(queryset=Druzyna.objects.all())
+    miesiac_urodzenia = serializers.ChoiceField(choices=Months.choices, default=Months.choices[0][0])
+    druzyna = serializers.PrimaryKeyRelatedField(queryset=Druzyna.objects.all(), allow_null=True)
 
     def create(self, validated_data):
         return Osoba.objects.create(**validated_data)
@@ -25,8 +25,16 @@ class DruzynaSerializer(serializers.Serializer):
     kraj = serializers.CharField(required=True)
 
     def create(self, validated_data):
-        return Osoba.objects.create(**validated_data)
+        return Druzyna.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         instance.nazwa = validated_data.get("nazwa", instance.nazwa)
         instance.kraj = validated_data.get("kraj", instance.kraj)
+        instance.save()
+        return instance
+
+class ProductModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ["id", "name", "description", "amount", "price"]
+        read_only_fields = ["id"]
