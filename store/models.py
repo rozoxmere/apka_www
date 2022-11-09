@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 
 # Create your models here.
@@ -39,7 +41,7 @@ class Months(models.IntegerChoices):
 class Osoba(models.Model):
     imie = models.TextField(null=False, blank=False)
     nazwisko = models.TextField(null=False, blank=False)
-    miesiac_urodzenia = models.IntegerField(choices=Months.choices)
+    miesiac_urodzenia = models.IntegerField(choices=Months.choices, default=datetime.date.month)
     data_dodania = models.DateField(auto_now_add=True)
     druzyna = models.ForeignKey(Druzyna, on_delete=models.SET_NULL,  null=True)
 
