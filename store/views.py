@@ -1,39 +1,40 @@
 from django.shortcuts import render
 from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Osoba, Druzyna
 from .serializers import OsobaSerializer, DruzynaSerializer
 
 
-@api_view(["GET"])
-def osoba_list(request):
-    if request.method == "GET":
+class ListUsers(APIView):
+    def get(self, request):
         persons = Osoba.objects.all()
         serializer = OsobaSerializer(persons, many=True)
         return Response(serializer.data)
 
 
-@api_view(["GET", "PUT", "DELETE"])
-def osoba_detail(request, pk):
-    try:
-        person = Osoba.objects.get(pk=pk)
-    except:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class OsobaDetail(APIView):
+    person = None
+    def __init__(self, request, pk):
+        try:
+            person = Osoba.objects.get(pk=pk)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == "GET":
+    def get(self, request, pk):
         person = Osoba.objects.get(pk=pk)
         serializer = OsobaSerializer(person)
         return Response(serializer.data)
 
-    elif request.method == "PUT":
+    def put(self, request, pk):
         serializer = OsobaSerializer(person, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "DELETE":
+    def delete(self, request, pk):
         person.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
