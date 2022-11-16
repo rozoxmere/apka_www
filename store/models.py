@@ -41,10 +41,10 @@ class Months(models.IntegerChoices):
 class Osoba(models.Model):
     imie = models.TextField(null=False, blank=False)
     nazwisko = models.TextField(null=False, blank=False)
-    miesiac_urodzenia = models.IntegerField(choices=Months.choices, default=datetime.date.month)
+    miesiac_urodzenia = models.IntegerField(choices=Months.choices)
     data_dodania = models.DateField(auto_now_add=True)
     druzyna = models.ForeignKey(Druzyna, on_delete=models.SET_NULL,  null=True)
-
+    wlasciciel = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True)
     def __str__(self):
         return f"{self.imie} {self.nazwisko}"
 

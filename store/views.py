@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from .models import Osoba, Druzyna
 from .serializers import OsobaSerializer, DruzynaSerializer
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["GET"])
@@ -14,7 +16,7 @@ def osoba_list(request):
         return Response(serializer.data)
 
 
-@api_view(["GET", "PUT", "DELETE"])
+@api_view(["GET"])
 def osoba_detail(request, pk):
     try:
         person = Osoba.objects.get(pk=pk)
@@ -25,17 +27,33 @@ def osoba_detail(request, pk):
         person = Osoba.objects.get(pk=pk)
         serializer = OsobaSerializer(person)
         return Response(serializer.data)
+@api_view(["DELETE"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def osoba_delete(request, pk):
+    try:
+        person = Osoba.objects.get(pk=pk)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    elif request.method == "PUT":
+    if request.method == "DELETE":
+        person.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(["PUT"])
+
+def osoba_update(request, pk):
+    try:
+        person = Osoba.objects.get(pk=pk)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "PUT":
         serializer = OsobaSerializer(person, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "DELETE":
-        person.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(["GET"])
