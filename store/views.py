@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 @api_view(["GET"])
 def osoba_list(request):
     if request.method == "GET":
-        persons = Osoba.objects.all()
+        persons = Osoba.objects.filter(wlasciciel = request.user).all()
         serializer = OsobaSerializer(persons, many=True)
         return Response(serializer.data)
 
