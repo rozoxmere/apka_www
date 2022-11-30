@@ -18,6 +18,7 @@ class PersonModelTest(TestCase):
         person1 = Person.objects.get(id=1)
         person2 = Person.objects.get(id=2)
 
+class DruzynaModelTest(TestCase):
     def test_team_two_items_ids(self):
         Druzyna.objects.create(nazwa="Młoty Doroty", kraj="PL")
         Druzyna.objects.create(nazwa="Red Tigers", kraj="GB")
