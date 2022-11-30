@@ -39,7 +39,7 @@ class Months(models.IntegerChoices):
     Listopad = 11
     Grudzien = 12
 class Osoba(models.Model):
-    imie = models.TextField(null=False, blank=False)
+    imie = models.TextField(null=False, blank=False, verbose_name="Imię")
     nazwisko = models.TextField(null=False, blank=False)
     miesiac_urodzenia = models.IntegerField(choices=Months.choices)
     data_dodania = models.DateField(auto_now_add=True)
