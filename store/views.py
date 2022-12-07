@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -97,6 +98,12 @@ def druzyna_list(request):
         teams = Druzyna.objects.all()
         serializer = DruzynaSerializer(teams, many=True)
         return Response(serializer.data)
+
+@permission_required('store.view_osoba')
+@api_view(["GET"])
+def group_test(request):
+    if request.method == "GET":
+        return Response("Twoja grupa działa")
 
 @api_view(["GET"])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
