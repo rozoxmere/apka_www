@@ -97,3 +97,13 @@ def druzyna_list(request):
         teams = Druzyna.objects.all()
         serializer = DruzynaSerializer(teams, many=True)
         return Response(serializer.data)
+
+@api_view(["GET"])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def druzyna_members(request, pk):
+    if request.method == "GET":
+        druzyny = Druzyna.objects.get(id = pk)
+        members = Osoba.objects.filter(druzyna=druzyny)
+        serializer = OsobaSerializer(members, many=True)
+        return Response(serializer.data)

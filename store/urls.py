@@ -8,6 +8,7 @@ urlpatterns = [
     path('persons/update/<int:pk>/', views.osoba_update),
     path('persons/filter/<str:name>', views.osoba_filter),
     path('team/<int:pk>', views.druzyna_detail),
+    path('team/<int:pk>/czlonkowie', views.druzyna_members),
     path('team/', views.druzyna_list)
 
 ]
